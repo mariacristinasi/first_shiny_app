@@ -99,7 +99,7 @@ server <- function(input, output) {
         n_low <- text=paste(input$n_low)
         n_large <- text=paste(input$n_large)
         interval=seq(min(input$n_low, input$n_large), max(input$n_low, input$n_large))
-        aver_int=average[input$n_low-1987:input$n_large-1987]
+        aver_int=average[input$n_low-data$Year[1]+1:input$n_large-data$Year[1]+1]
     })
     
     observe(if(input$auto_low) disable("n_low") else enable("n_low") )
@@ -108,7 +108,7 @@ server <- function(input, output) {
     
     output$meanPlot <- renderPlot(
         ggplot(data.frame(t=seq(min(input$n_low, input$n_large), max(input$n_low, input$n_large)),
-            aver=aver_year[(min(input$n_low, input$n_large)-1987):(max(input$n_low, input$n_large)-1987)]), 
+            aver=aver_year[(min(input$n_low, input$n_large)-data$Year[1]+1):(max(input$n_low, input$n_large)-data$Year[1]+1)]), 
             aes(t, aver)) +
             geom_point(size=2, color="deepskyblue3")+
             xlab("Year") + ylab("Anual CO2 concentration (ppm)") +
@@ -117,8 +117,8 @@ server <- function(input, output) {
 
     );
     
-    output$histSummary <- renderPrint(summary(data))
-    output$histTable <- renderTable(data)
+    output$histSummary <- renderPrint(summary(data[data$Year>=(min(input$n_low, input$n_large)) & data$Year<=(max(input$n_low, input$n_large)),]))
+    output$histTable <- renderTable(data[data$Year>=(min(input$n_low, input$n_large)) & data$Year<=(max(input$n_low, input$n_large)),])
   
         }
 
