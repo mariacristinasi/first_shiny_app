@@ -21,7 +21,10 @@ for (i in 1:(data$Year[nrow(data)]-data$Year[1])){
             aver_year[i]=aver_year[i]+data$CO2[j]
 }}}
 
+# Ui
 ui <- navbarPage("CO2Hawaii dataset",
+                 tabPanel("General information",
+                          includeMarkdown("info.md")),
                  tabPanel("Time serie visualization",
                           fluidPage(
                               sidebarLayout(sidebarPanel(
@@ -60,16 +63,14 @@ ui <- navbarPage("CO2Hawaii dataset",
                                                         tabPanel("Summary", verbatimTextOutput("histSummary")),
                                                         tabPanel("Table", tableOutput("histTable"))
                                             )
-                                        )) # sidebarLayout
+                                        )) 
                  ),
                  useShinyjs()
-) # navbarPage
+) 
 
 col_scale <- scale_colour_discrete(limits = list_choices)
 
-library(ggplot2)
-library(ggthemes)
-# Define server logic required to draw a histogram
+# Server
 server <- function(input, output) {
     output$plots<- renderPlot({
         if (identical(input$select, "Original series")){
